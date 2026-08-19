@@ -1066,6 +1066,23 @@ database-unpainted.gl.joinmc.link
 | `/mute <玩家> [時間] [原因]`、`/unmute <玩家>`、`/jail`、`/unjail` | 管理處分（僅在已配置對應功能時使用）。 |
 | `/broadcast <訊息>`、`/mail send <玩家> <訊息>`、`/socialspy` | 公告、寄信與社交監看。 |
 | `/nick <玩家> <名稱>`、`/itemname`、`/setworth`、`/worth` | 暱稱、物品名稱與物品價值管理。 |
+| `/kit head` | 讓玩家取得一顆使用自己目前造型的玩家頭顱；本服已授權 `player` 群組使用。 |
+
+玩家自己的頭顱由 `plugins/Essentials/kits.yml` 中的 `head` 套件產生，內容使用 `player:{USERNAME}`，因此玩家不必也不能透過此套件指定別人的名稱。目前應保留以下 LuckPerms 權限：
+
+```text
+essentials.kit
+essentials.kits.head
+```
+
+若需要重新授權玩家群組，可在遊戲內輸入：
+
+```text
+/lp group player permission set essentials.kit true
+/lp group player permission set essentials.kits.head true
+```
+
+不建議為一般玩家開放 `essentials.skull.others`、`essentials.skull.modify` 或 `essentials.skull.spawn.others`，避免玩家任意產生或修改其他人的頭顱。
 
 ### 28.3 LuckPerms 權限管理
 
