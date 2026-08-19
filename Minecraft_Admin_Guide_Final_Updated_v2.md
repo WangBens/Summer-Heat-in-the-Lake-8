@@ -19,6 +19,8 @@ EssentialsX
 EssentialsXSpawn
 DecentHolograms
 FancyNpcs
+LuckPerms
+ViaVersion
 ```
 
 目前沒有安裝玩家自助領地插件，例如 GriefPrevention、Lands、Residence。
@@ -37,6 +39,8 @@ FancyNpcs
 
 ### Java
 
+玩家使用 Minecraft Java Edition `26.1.2` 加入。
+
 ```text
 database-unpainted.gl.joinmc.link
 ```
@@ -44,8 +48,8 @@ database-unpainted.gl.joinmc.link
 ### Bedrock / 手機版
 
 ```text
-traffic-convert.gl.at.ply.gg
-Port: 57476
+governors-grown.tun.ply.gg
+Port: 9794
 ```
 
 ---
@@ -505,8 +509,8 @@ notify-no-new-mail: false
 ### Bedrock 玩家連線資訊
 
 ```text
-traffic-convert.gl.at.ply.gg
-Port: 57476
+governors-grown.tun.ply.gg
+Port: 9794
 ```
 
 ### Geyser 設定重點
@@ -865,7 +869,7 @@ FancyNpcs 2.11.0 使用 `remove`，不是 `delete`。
 /npc action admin_npc RIGHT_CLICK add message <white>請尊重、友善、公平遊玩。</white>
 /npc action admin_npc RIGHT_CLICK add message <red>禁止偷竊、破壞、外掛、洗頻、惡意卡服。</red>
 /npc action admin_npc RIGHT_CLICK add message <aqua>Java：database-unpainted.gl.joinmc.link</aqua>
-/npc action admin_npc RIGHT_CLICK add message <aqua>Bedrock：traffic-convert.gl.at.ply.gg Port：57476</aqua>
+/npc action admin_npc RIGHT_CLICK add message <aqua>Bedrock：governors-grown.tun.ply.gg Port：9794</aqua>
 /npc action admin_npc RIGHT_CLICK add message <green>BlueMap 網址請向管理員索取。</green>
 ```
 
@@ -941,6 +945,8 @@ FancyNpcs
 Floodgate
 Geyser-Spigot
 GSit
+LuckPerms
+ViaVersion
 WorldEdit
 WorldGuard
 ```
@@ -985,3 +991,186 @@ sudo systemctl status playit
 ```bash
 sudo systemctl restart playit
 ```
+
+---
+
+## 26. 現行正式連線資訊（2026-08 更新）
+
+請在公告、NPC、浮空文字與網站使用下列資訊；請勿使用舊的基岩連線資訊。
+
+```text
+🛜｜加入伺服器
+JAVA版本 (26.1.2)
+請在「多人遊戲」新增伺服器，輸入：
+database-unpainted.gl.joinmc.link
+
+基岩版 / 手機版
+請在「遊玩 > 伺服器 > 新增伺服器」中輸入：
+伺服器位址：governors-grown.tun.ply.gg
+連接埠：9794
+```
+
+伺服器內部仍由 Geyser 監聽 UDP `19132`，`9794` 是提供給玩家的外部基岩連線埠。不要把 Geyser 設定中的內部監聽埠直接改成 `9794`。
+
+---
+
+## 27. 指令權限與安全原則
+
+- 本服使用 **LuckPerms** 管理權限；下表的管理指令只應授權給受信任的管理員群組。
+- 遊戲內輸入指令時加 `/`；在伺服器控制台輸入時不加 `/`。
+- 用 `/help`、`/essentials help`、`/co help`、`//help`、`/rg help`、`/npc help` 與 `/dh help` 可查看目前版本支援的完整子指令與語法。
+- 不要使用 `/reload`、`/rl` 或外掛熱重載來更新外掛。涉及 Geyser、Floodgate、Paper 與設定檔的變更，一律正常 `stop` 後重啟。
+- 執行回溯、WorldEdit 大範圍操作、權限變更與白名單變更前，先確認玩家名稱、世界、範圍與時間；必要時先備份世界與資料庫。
+
+---
+
+## 28. 管理員完整指令索引
+
+### 28.1 原版與 Paper 控制台管理
+
+| 指令 | 用途 |
+| --- | --- |
+| `stop` | 正常儲存所有世界後關閉伺服器。 |
+| `save-all`、`save-on`、`save-off` | 立即儲存或控制自動儲存；只在維護時短暫使用 `save-off`。 |
+| `list` | 查看線上玩家。 |
+| `say <訊息>` | 以伺服器身分公告。 |
+| `kick <玩家> [原因]` | 踢出玩家。 |
+| `ban <玩家> [原因]`、`pardon <玩家>` | 封鎖或解除封鎖玩家。 |
+| `ban-ip <位址> [原因]`、`pardon-ip <位址>` | 封鎖或解除封鎖 IP。 |
+| `op <玩家>`、`deop <玩家>` | 給予或移除 OP；一般情況建議改以 LuckPerms 群組管理。 |
+| `whitelist on|off|list|reload` | 開關、查看或重新讀取白名單。 |
+| `whitelist add <Java名稱>`、`whitelist remove <名稱>` | 新增或移除 Java 玩家。 |
+| `fwhitelist add <基岩Gamertag>`、`fwhitelist remove <基岩Gamertag>` | 以 Floodgate 管理基岩版白名單；名稱前不要加 `.`。 |
+| `gamerule <規則> <值>` | 調整世界規則，例如 `playersSleepingPercentage 1`。 |
+| `setworldspawn <x> <y> <z>` | 設定原版世界重生點。 |
+| `time set <day|night>`、`weather <clear|rain|thunder>` | 管理時間與天氣。 |
+| `difficulty <peaceful|easy|normal|hard>` | 調整難度。 |
+| `defaultgamemode <模式>`、`gamemode <模式> [玩家]` | 調整預設或個別玩家遊戲模式。 |
+| `tp <目標>`、`tp <玩家> <目標>` | 傳送玩家；傳送前確認目標位置安全。 |
+| `give <玩家> <物品> [數量]`、`clear <玩家> [物品]` | 給予或清除物品。 |
+| `effect give|clear`、`enchant`、`experience` | 管理效果、附魔與經驗值。 |
+
+### 28.2 EssentialsX 與出生點管理
+
+| 指令 | 用途 |
+| --- | --- |
+| `/essentials`、`/ess reload` | 查看 EssentialsX 資訊；`/ess reload` 僅適合小幅設定調整，避免用於全服／外掛更新。 |
+| `/setspawn [群組]`、`/spawn [玩家]` | 設定或傳送至 EssentialsX 出生點。 |
+| `/setwarp <名稱>`、`/delwarp <名稱>`、`/warp <名稱>`、`/warps` | 建立、刪除、使用與查看公開傳送點。 |
+| `/sethome [玩家] [名稱]`、`/delhome [玩家] [名稱]`、`/home [玩家] [名稱]` | 管理自己或指定玩家的家。 |
+| `/tp <玩家>`、`/tphere <玩家>`、`/tpall`、`/tppos <x> <y> <z>` | EssentialsX 傳送工具。 |
+| `/back [玩家]` | 讓玩家返回傳送前位置或死亡點。 |
+| `/heal [玩家]`、`/feed [玩家]`、`/fly [玩家]`、`/god [玩家]` | 生命、飽食、飛行與無敵管理。 |
+| `/invsee <玩家>`、`/enderchest [玩家]`、`/clearinventory [玩家]` | 檢視或管理背包與終界箱；操作前需確認事由。 |
+| `/seen <玩家>`、`/whois <玩家>`、`/realname <名稱>` | 查詢玩家基本資料。 |
+| `/mute <玩家> [時間] [原因]`、`/unmute <玩家>`、`/jail`、`/unjail` | 管理處分（僅在已配置對應功能時使用）。 |
+| `/broadcast <訊息>`、`/mail send <玩家> <訊息>`、`/socialspy` | 公告、寄信與社交監看。 |
+| `/nick <玩家> <名稱>`、`/itemname`、`/setworth`、`/worth` | 暱稱、物品名稱與物品價值管理。 |
+
+### 28.3 LuckPerms 權限管理
+
+| 指令 | 用途 |
+| --- | --- |
+| `/lp`、`/lp help` | LuckPerms 主指令與說明。 |
+| `/lp user <玩家> info` | 查看玩家目前群組與權限。 |
+| `/lp user <玩家> parent add <群組>` | 將玩家加入群組。 |
+| `/lp user <玩家> parent remove <群組>` | 從群組移除玩家。 |
+| `/lp user <玩家> permission set <節點> true|false` | 為個別玩家授權或拒絕權限。 |
+| `/lp group <群組> permission set <節點> true|false` | 管理群組權限。 |
+| `/lp group <群組> parent add <上層群組>` | 設定群組繼承。 |
+| `/lp editor` | 開啟網頁權限編輯器；套用前再次檢查差異。 |
+| `/lp sync`、`/lp save` | 與外部儲存同步或儲存；目前使用本機 H2 儲存時通常不需手動同步。 |
+
+### 28.4 CoreProtect 稽核與回復
+
+| 指令 | 用途 |
+| --- | --- |
+| `/co inspect`、`/co i` | 開啟／關閉點擊方塊查詢模式。 |
+| `/co lookup [參數]`、`/co l [參數]` | 查詢紀錄。常用：`/co l u:玩家 t:1h r:20`。 |
+| `/co rollback [參數]` | 回復符合篩選的變更。範例：`/co rollback u:玩家 t:1h r:20`。 |
+| `/co restore [參數]` | 撤銷先前回復；篩選條件必須與回復一致。 |
+| `/co near` | 查詢附近紀錄。 |
+| `/co status` | 查看 CoreProtect 佇列與狀態。 |
+| `/co purge t:<時間>` | 清除過舊紀錄；執行前先備份 `plugins/CoreProtect/database.db`。 |
+
+CoreProtect 篩選常用縮寫：`u:` 玩家、`t:` 時間、`r:` 半徑、`w:` 世界、`a:` 動作、`b:` 方塊／物品。先用 `lookup` 驗證結果，再使用 `rollback`。
+
+### 28.5 WorldEdit 建設指令
+
+| 指令 | 用途 |
+| --- | --- |
+| `//wand` | 取得選取工具。 |
+| `//pos1`、`//pos2` | 設定第一與第二個選取點。 |
+| `//hpos1`、`//hpos2` | 將看向的方塊設為選取點。 |
+| `//expand <數量> <方向>`、`//expand vert` | 延伸選區；建立 WorldGuard 區域前常用 `//expand vert`。 |
+| `//contract <數量> <方向>`、`//shift <數量> <方向>` | 縮小或位移選區。 |
+| `//set <方塊>`、`//replace <來源> <目標>`、`//overlay <方塊>` | 填滿、替換或覆蓋選區方塊。 |
+| `//copy`、`//cut`、`//paste [-a]` | 複製、剪下與貼上建築。 |
+| `//rotate <角度>`、`//flip [方向]` | 旋轉或翻轉剪貼簿。 |
+| `//undo [次數]`、`//redo [次數]` | 復原或重做 WorldEdit 操作。 |
+| `//schem save <名稱>`、`//schem load <名稱>`、`//schem list` | 儲存、載入與列出建築藍圖。 |
+| `//regen` | 重新生成選區；高風險操作，請先備份。 |
+
+### 28.6 WorldGuard 區域保護
+
+| 指令 | 用途 |
+| --- | --- |
+| `/rg define <區域>`、`/rg remove <區域>` | 以目前 WorldEdit 選區建立或移除區域。 |
+| `/rg info [區域]`、`/rg list [玩家]` | 查看區域資訊或玩家所在／擁有的區域。 |
+| `/rg flag <區域> <旗標> <值>` | 設定旗標。例：`/rg flag spawn pvp deny`。 |
+| `/rg addowner <區域> <玩家>`、`/rg removeowner <區域> <玩家>` | 管理區域擁有者。 |
+| `/rg addmember <區域> <玩家>`、`/rg removemember <區域> <玩家>` | 管理區域成員。 |
+| `/rg setpriority <區域> <數值>` | 設定重疊區域優先順序。 |
+| `/rg setparent <子區域> <父區域>` | 設定區域父子關係。 |
+| `/rg teleport <區域>` | 傳送至區域（需對應權限）。 |
+
+常用保護旗標：`block-break`、`block-place`、`pvp`、`mob-spawning`、`mob-damage`、`tnt`、`creeper-explosion`、`other-explosion`、`fire-spread`、`chest-access`。
+
+### 28.7 NPC、全像投影與地圖
+
+| 外掛 | 指令 | 用途 |
+| --- | --- | --- |
+| FancyNpcs | `/npc list`、`/npc info <ID>`、`/npc create <ID> --type player` | 列表、資訊與建立 NPC。 |
+| FancyNpcs | `/npc displayname <ID> <文字>`、`/npc skin <ID> <玩家>`、`/npc move <ID>`、`/npc remove <ID>` | 修改名稱、皮膚、位置與刪除 NPC。 |
+| FancyNpcs | `/npc action <ID> RIGHT_CLICK add message <訊息>` | 加入右鍵顯示訊息互動。 |
+| DecentHolograms | `/dh list`、`/dh h create <名稱> <文字>`、`/dh h delete <名稱>` | 列出、建立、刪除全像投影。 |
+| DecentHolograms | `/dh l add <投影> <頁> <文字>`、`/dh l set <投影> <頁> <行> <文字>` | 新增或修改文字行。 |
+| DecentHolograms | `/dh h movehere <名稱>`、`/dh reload` | 移到目前位置或重新讀取設定。 |
+| BlueMap | `/bluemap`、`/bluemap help` | 查看 BlueMap 可用管理子指令；渲染與網站設定請在低峰時段操作。 |
+
+### 28.8 Geyser、Floodgate 與 ViaVersion
+
+| 指令 | 用途 |
+| --- | --- |
+| `/geyser help`、`/geyser version` | 查看 Geyser 說明與目前版本。 |
+| `/geyser dump` | 產生診斷資料；分享前檢查是否含敏感資訊。 |
+| `/fwhitelist add|remove <Gamertag>`、`/fwhitelist list` | 管理基岩版白名單。 |
+| `/linkaccount`、`/unlinkaccount` | Floodgate 帳號連結／解除連結（依設定與權限可用）。 |
+| `/viaversion list`、`/viaversion pps`、`/viaversion dump` | 檢查 Java 用戶端版本、封包速率與診斷資料。 |
+
+### 28.9 GSit 管理
+
+| 指令 | 用途 |
+| --- | --- |
+| `/gsitreload`、`/gsitrl` | 重新讀取 GSit 設定。 |
+| `/gsit kick <玩家>` | 讓玩家離開坐姿／姿勢；僅在需要處理卡住時使用。 |
+| `/sit`、`/lay`、`/bellyflop`、`/crawl`、`/spin` | 可用於測試玩家姿勢功能。 |
+
+---
+
+## 29. Paper 紅石複製相容設定
+
+TNT、地毯與鐵軌等活塞複製機由 Paper 核心設定控制，**不是外掛擋住**。設定檔為：
+
+```text
+/opt/minecraft/server/config/paper-global.yml
+```
+
+應維持：
+
+```yaml
+unsupported-settings:
+  allow-piston-duplication: true
+```
+
+修改後必須正常重啟才會生效。請監看大量 TNT 複製機與同時爆炸，必要時要求玩家分批運作，以避免 TPS 明顯下降。
