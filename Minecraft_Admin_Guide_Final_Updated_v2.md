@@ -941,6 +941,7 @@ CoreProtect
 DecentHolograms
 Essentials
 EssentialsSpawn
+FakePlayerPlugin
 FancyNpcs
 Floodgate
 Geyser-Spigot
@@ -1018,7 +1019,7 @@ database-unpainted.gl.joinmc.link
 
 - 本服使用 **LuckPerms** 管理權限；下表的管理指令只應授權給受信任的管理員群組。
 - 遊戲內輸入指令時加 `/`；在伺服器控制台輸入時不加 `/`。
-- 用 `/help`、`/essentials help`、`/co help`、`//help`、`/rg help`、`/npc help` 與 `/dh help` 可查看目前版本支援的完整子指令與語法。
+- 用 `/help`、`/essentials help`、`/co help`、`//help`、`/rg help`、`/npc help`、`/dh help` 與 `/fpp help` 可查看目前版本支援的完整子指令與語法。
 - 不要使用 `/reload`、`/rl` 或外掛熱重載來更新外掛。涉及 Geyser、Floodgate、Paper 與設定檔的變更，一律正常 `stop` 後重啟。
 - 執行回溯、WorldEdit 大範圍操作、權限變更與白名單變更前，先確認玩家名稱、世界、範圍與時間；必要時先備份世界與資料庫。
 
@@ -1173,6 +1174,132 @@ CoreProtect 篩選常用縮寫：`u:` 玩家、`t:` 時間、`r:` 半徑、`w:` 
 | `/gsit kick <玩家>` | 讓玩家離開坐姿／姿勢；僅在需要處理卡住時使用。 |
 | `/sit`、`/lay`、`/bellyflop`、`/crawl`、`/spin` | 可用於測試玩家姿勢功能。 |
 
+### 28.10 FakePlayerPlugin（FPP）假人管理
+
+本服已安裝 **FakePlayerPlugin 2.0.5**，可建立伺服器端假人，用於掛機農場、紅石測試、方塊互動、路徑移動及效能測試。假人會載入周圍區塊，且目前啟用重新啟動後恢復功能；不需要時應主動移除，避免長時間占用伺服器資源。
+
+FPP 主指令為 `/fpp`，別名為 `/fakeplayer`、`/fp`。目前只有以下三個遊戲身分可以使用全部 FPP 指令：
+
+```text
+.Porchplaygame
+MuYan_TW
+.MuYan_TW
+```
+
+名稱前的 `.` 是 Floodgate 基岩版前綴，設定權限時不能省略。LuckPerms 已對 `default`、`player`、`moderator`、`admin` 四個群組設定 `fpp.* = false`，再對上述三個 UUID 個別設定 `fpp.admin = true`；因此其他玩家與其他 OP 都不應取得 FPP 指令。
+
+#### 建立、查看與移除
+
+| 指令 | 用途 |
+| --- | --- |
+| `/fpp` | 查看外掛、版本及目前假人資訊。 |
+| `/fpp help [頁數]` | 開啟依權限過濾的互動式指令說明。 |
+| `/fpp spawn` | 在自己目前位置建立一名自動命名的假人；只能由遊戲內玩家執行。 |
+| `/fpp spawn --name <名稱>` | 建立一名指定名稱的假人；名稱限 1–16 個英數字或底線。 |
+| `/fpp list [頁數]` | 查看目前存在的假人。 |
+| `/fpp despawn <名稱>` | 移除指定假人。 |
+| `/fpp despawn --own` | 移除自己建立的所有假人。 |
+| `/fpp despawn --all` | 移除所有假人；執行前先確認其他管理員是否正在測試。 |
+| `/fpp despawn --count <數量>` | 依建立時間移除指定數量的假人。 |
+| `/fpp despawn --random --count <數量>` | 隨機移除指定數量的假人。 |
+
+#### 移動、傳送與姿態
+
+| 指令 | 用途 |
+| --- | --- |
+| `/fpp move <假人> --to <玩家或假人>` | 讓假人尋路並持續跟隨指定目標。 |
+| `/fpp move <假人> --coords <x> <y> <z> [世界]` | 讓假人尋路到指定座標。 |
+| `/fpp move <假人> --stop` | 停止該假人的尋路。 |
+| `/fpp tp <假人>` | 將自己傳送到指定假人旁。 |
+| `/fpp tph <假人>`、`/fpp tph all` | 將指定或所有可管理的假人傳送到自己身旁。 |
+| `/fpp sneak <假人> on`、`off` 或 `toggle` | 設定或切換潛行狀態。 |
+| `/fpp freeze <假人或 all> on` 或 `off` | 凍結或解除凍結假人位置。 |
+
+#### 點擊、自動化與戰鬥
+
+| 指令 | 用途 |
+| --- | --- |
+| `/fpp left-click <假人> --once` | 讓假人對準目前瞄準點左鍵一次，可破壞方塊或攻擊實體。 |
+| `/fpp left-click <假人> --repeat`、`--hold` 或 `--stop` | 重複、持續或停止左鍵動作。 |
+| `/fpp right-click <假人> --once` | 讓假人右鍵一次，可使用手持物品或操作按鈕、拉桿及容器。 |
+| `/fpp right-click <假人> --repeat`、`--hold` 或 `--stop` | 重複、持續或停止右鍵動作。 |
+| `/fpp find <假人> <方塊> [--radius <半徑>] [--count <數量>] [--prefer-visible]` | 尋找附近指定方塊並執行搜尋／移動工作。 |
+| `/fpp find <假人> --stop` | 停止指定假人的搜尋工作。 |
+| `/fpp storage <假人> --list` | 查看假人的儲存目標。 |
+| `/fpp storage <假人> <名稱>` | 將看向的箱子、木桶、漏斗或界伏盒登錄為儲存目標。 |
+| `/fpp storage <假人> --deposit [名稱]` | 將假人物品存入指定或啟用中的儲存目標。 |
+| `/fpp storage <假人> --remove <名稱>`、`--clear`、`--enable <名稱>` 或 `--disable <名稱>` | 移除、清空、啟用或停用儲存目標。 |
+| `/fpp attack <假人或 all> [--once] [--stop]` | 執行或停止基本揮擊／攻擊。較完整的 PVE 行為在假人設定 GUI 內調整。 |
+| `/fpp stop [<假人> 或 all]` | 停止指定或所有假人的全部進行中工作。 |
+
+FPP 2.0.5 支援多工，同一假人的 `move`、`find`、左右鍵及 PVE 工作可能同時運作。結束測試時優先使用 `/fpp stop <假人>`，確認停止後再移除假人。
+
+#### 背包、擁有者與資料管理
+
+| 指令 | 用途 |
+| --- | --- |
+| `/fpp inventory <假人>`、`/fpp inv <假人>` | 開啟假人的完整背包。 |
+| `/fpp xp <假人>` | 取回自己假人儲存的經驗值。 |
+| `/fpp rename <假人> <新名稱>` | 修改顯示名稱；UUID 與強制顯示的假人擁有者標記不變。 |
+| `/fpp setowner <假人> <玩家>` | 轉移假人擁有權。 |
+| `/fpp info [bot 或 spawner] <名稱>` | 查詢假人或建立者的資料庫工作階段紀錄。 |
+| `/fpp save` | 立即儲存所有假人、背包與工作資料。 |
+| `/fpp settings [假人]` | 開啟全域或個別假人的設定 GUI。 |
+| `/fpp check [檢查旗標]` | 使用 `--deep`、`--simulation`、`--commands`、`--listeners`、`--nms`、`--database`、`--folia`、`--world`、`--config`、`--extensions`、`--memory` 或 `--all` 執行健康檢查。 |
+| `/fpp reload [all、config 或 lang]` | 重新讀取 FPP 設定；更新 JAR 時仍必須正常關服重啟。 |
+| `/fpp perf <check、top、history 或 spark>` | 查看效能狀態或啟動 Spark 分析。 |
+| `/fpp perf report`、`/fpp perf report stop` | 開始或停止 FPP 效能報告。 |
+
+#### 目前停用的功能
+
+| 指令 | 狀態 |
+| --- | --- |
+| `/fpp rent <buy、extend、info、give 或 clear>` | 經濟與租用系統目前為 `economy.enabled: false`，不要對玩家公告此功能。管理員的 `rent give` 雖不需經濟外掛，仍應在正式啟用租用制度後才使用。 |
+| `/fpp auth <on、off、status、reset 或 setpassword>` | 登入牆自動註冊功能目前為 `auth.enabled: false`；本服沒有使用 AuthMe／nLogin 類登入牆，不應啟用。 |
+
+#### 本服安全限制與權限維護
+
+FPP 設定檔：
+
+```text
+/opt/minecraft/server/plugins/FakePlayerPlugin/config.yml
+```
+
+目前安全限制：
+
+```yaml
+limits:
+  max-bots: 10
+spawn-cooldown: 5
+chunk-loading:
+  mass-disable-threshold: 10
+```
+
+三位授權者另有 `fpp.bypass.max = false` 與 `fpp.bypass.cooldown = false`，因此即使具有 `fpp.admin`，仍不能繞過全服 10 名上限與 5 秒冷卻。修改上限時要同時考量目前 JVM 只有 `-Xmx2G`；假人會載入區塊，切勿把上限恢復為外掛預設的 1000。
+
+檢查授權：
+
+```text
+/lp user .Porchplaygame permission check fpp.admin
+/lp user MuYan_TW permission check fpp.admin
+/lp user .MuYan_TW permission check fpp.admin
+/lp group default permission check fpp.command
+```
+
+撤銷個別玩家全部 FPP 管理權：
+
+```text
+/lp user <玩家> permission unset fpp.admin
+/lp user <玩家> permission unset fpp.bypass.max
+/lp user <玩家> permission unset fpp.bypass.cooldown
+```
+
+不要把 `fpp.admin`、`fpp.op`、`fpp.use` 或 `fpp.command` 授予一般玩家群組，也不要移除四個群組的 `fpp.* = false` 拒絕規則。安裝備份位於：
+
+```text
+/opt/minecraft/server/backups/fpp-install-20260821-163844
+```
+
 ---
 
 ## 29. Paper 紅石複製相容設定
@@ -1191,3 +1318,4 @@ unsupported-settings:
 ```
 
 修改後必須正常重啟才會生效。請監看大量 TNT 複製機與同時爆炸，必要時要求玩家分批運作，以避免 TPS 明顯下降。
+
